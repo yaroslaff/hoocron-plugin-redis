@@ -7,6 +7,7 @@ from queue import Queue, Empty
 
 class RedisHook(HoocronHookBase):
     def __init__(self):
+        self.th = None
         self.redis_path = None
         self.redis_list = None
         self.redis = None # Redis connection
@@ -63,7 +64,7 @@ class RedisHook(HoocronHookBase):
             else:
                 for j in self.jobs:
                     if j.name == request:
-                        self.execute_q.put((j, 'cron'))
+                        self.execute_q.put((j, 'redis'))
 
         
     def running(self):

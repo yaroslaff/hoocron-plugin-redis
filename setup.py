@@ -15,7 +15,7 @@ setup(
     version='0.0.1',
     packages=['hoocron_plugin.redis'],
 
-    install_requires=['redis'],
+    install_requires=['hoocron', 'redis'],
 
     url='https://github.com/yaroslaff/hoocron-plugin-redis',
     license='MIT',
