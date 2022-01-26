@@ -25,7 +25,7 @@ class RedisHook(HoocronHookBase):
         def_redis = os.getenv('REDIS') or 'redis://localhost:6379/0'
         def_redis_list = 'hook'
         g = parser.add_argument_group('Redis hook')
-        g.add_argument('--rj', '--redis-job', metavar='JOB', nargs='+', action='store', help='Jobs to bind with redis hook')
+        g.add_argument('--redis-job', '--rj', metavar='JOB', nargs='+', action='store', help='Jobs to bind with redis hook')
         g.add_argument('--redis', metavar='REDIS_URL', default=def_redis, help=f'Path to redis def: {def_redis}')
         g.add_argument('--redis-list', metavar='KEY', default=def_redis_list, help=f'name of redis key to trigger jobs. def: {def_redis_list}')
 
@@ -34,13 +34,14 @@ class RedisHook(HoocronHookBase):
         self.redis_list = args.redis_list
         self.sleep = args.sleep
 
-        for name in args.rj:
-            try:
-                j = jobs[name]
-            except KeyError:
-                print("ERROR: Not found job", name)
-                sys.exit(1)
-            self.jobs.append(j)
+        if args.redis_job:
+            for name in args.redis_job:
+                try:
+                    j = jobs[name]
+                except KeyError:
+                    print("ERROR: Not found job", name)
+                    sys.exit(1)
+                self.jobs.append(j)
 
     def empty(self):
         return not bool(self.jobs)
