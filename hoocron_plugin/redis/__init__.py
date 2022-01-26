@@ -1,5 +1,6 @@
 import redis
 import sys
+import os
 import time
 from hoocron_plugin import HoocronHookBase
 from threading import Thread
@@ -21,21 +22,19 @@ class RedisHook(HoocronHookBase):
 
     def add_argument_group(self, parser):
 
-        def_redis_path = 'localhost:6379'
+        def_redis = os.getenv('REDIS') or 'redis://localhost:6379/0'
         def_redis_list = 'hook'
         g = parser.add_argument_group('Redis hook')
-        g.add_argument('--redis', metavar='JOB', default=list(), action='append')
-        g.add_argument('--redis-db', metavar='DB', type=int, default=0, help='redis db number')
-        g.add_argument('--redis-path', metavar='SOCKET', default=def_redis_path, help=f'Path to redis def: {def_redis_path}')
-        g.add_argument('--redis-list', metavar='KEY', default=def_redis_list, help='name of redis key to call hooks def: {def_redis_list}')
+        g.add_argument('--rj', '--redis-job', metavar='JOB', nargs='+', action='store', help='Jobs to bind with redis hook')
+        g.add_argument('--redis', metavar='REDIS_URL', default=def_redis, help=f'Path to redis def: {def_redis}')
+        g.add_argument('--redis-list', metavar='KEY', default=def_redis_list, help=f'name of redis key to trigger jobs. def: {def_redis_list}')
 
     def configure(self, jobs, args):
-        self.db = args.redis_db
-        self.redis_path = args.redis_path
+        self.redis = args.redis
         self.redis_list = args.redis_list
         self.sleep = args.sleep
 
-        for name in args.redis:
+        for name in args.rj:
             try:
                 j = jobs[name]
             except KeyError:
@@ -89,21 +88,8 @@ class RedisHook(HoocronHookBase):
 
 
     def get_redis(self):
-        if self.redis_path.startswith('/'):
-            path = self.redis_path
-            host = None
-            port = None
-            print(f"connect to redis over unix socket: {path}")
-        else:
-            host, port = self.redis_path.split(':')
-            path = None
-            print(f"connect to redis over network: {host}:{port}")
+        return redis.Redis.from_url(self.redis, decode_responses=True)
 
-        return redis.Redis(
-            db=self.db,
-            unix_socket_path=path, 
-            host=host, port=port,
-            decode_responses=True)
 
 
 hooks = [ RedisHook() ]
