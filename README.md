@@ -25,7 +25,7 @@ Now send hook name to list 'hook' (we will use redis-cli for this):
 (integer) 1
 ~~~
 
-hoocron will run job J in less then 1 second (default sleep period)
+hoocron will run job `TICK` in less then 1 second (default sleep period)
 
 ## Other options
 ~~~
