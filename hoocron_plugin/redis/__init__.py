@@ -7,6 +7,9 @@ from threading import Thread
 from queue import Queue, Empty
 
 class RedisHook(HoocronHookBase):
+    
+    name = 'redis'
+    
     def __init__(self):
         self.th = None
         self.redis_path = None
@@ -16,10 +19,7 @@ class RedisHook(HoocronHookBase):
         self.jobs = list()
         self.q = None
         self.execute_q = None
-        
-        
-
-
+                
     def add_argument_group(self, parser):
 
         def_redis = os.getenv('REDIS_URL', 'redis://localhost:6379/0')

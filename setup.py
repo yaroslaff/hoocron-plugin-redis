@@ -12,7 +12,7 @@ def read(fname):
 
 setup(
     name='hoocron-plugin-redis',
-    version='0.0.3',
+    version='0.0.4',
     packages=['hoocron_plugin.redis'],
 
     install_requires=['hoocron', 'redis'],
