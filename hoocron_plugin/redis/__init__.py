@@ -22,11 +22,11 @@ class RedisHook(HoocronHookBase):
 
     def add_argument_group(self, parser):
 
-        def_redis = os.getenv('REDIS') or 'redis://localhost:6379/0'
-        def_redis_list = 'hook'
+        def_redis = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+        def_redis_list = os.getenv('REDIS_LIST', 'hook')
         g = parser.add_argument_group('Redis hook')
-        g.add_argument('--redis-job', '--rj', metavar='JOB', nargs='+', action='store', help='Jobs to bind with redis hook')
-        g.add_argument('--redis', metavar='REDIS_URL', default=def_redis, help=f'Path to redis def: {def_redis}')
+        g.add_argument('--redis', metavar='JOB', nargs='+', action='store', help='Jobs to bind with redis hook')
+        g.add_argument('--redis-url', metavar='REDIS_URL', default=def_redis, help=f'Path to redis def: {def_redis}')
         g.add_argument('--redis-list', metavar='KEY', default=def_redis_list, help=f'name of redis key to trigger jobs. def: {def_redis_list}')
 
     def configure(self, jobs, args):

@@ -8,9 +8,9 @@ pip3 install hoocron-plugin-redis
 ~~~
 
 ## Example simple usage
-Start hoocron with redis plugin, configure `--redis-job` (`--rj`):
+Start hoocron with redis plugin, configure `--redis`:
 ~~~
-$ hoocron.py --rj TICK
+$ hoocron.py --redis TICK
 
 Loading hoocron_plugin.cron
 Loading hoocron_plugin.http
@@ -29,9 +29,10 @@ hoocron will run job `TICK` in less then 1 second (default sleep period)
 
 ## Other options
 ~~~
-  --rj JOB [JOB ...], --redis-job JOB [JOB ...]
+  --redis JOB [JOB ...]
                         Jobs to bind with redis hook
-  --redis REDIS_URL     Path to redis def: redis://localhost:6379/0
+  --redis-url REDIS_URL Path to redis def: redis://localhost:6379/0
   --redis-list KEY      name of redis key to trigger jobs. def: hook
 ~~~
 
+`--redis-url` could be set from environment variable `REDIS_URL`
