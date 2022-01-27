@@ -11,7 +11,7 @@ class RedisHook(HoocronHookBase):
         self.th = None
         self.redis_path = None
         self.redis_list = None
-        self.redis = None # Redis connection
+        self.redis_url = None # Redis connection
         self.sleep = 1
         self.jobs = list()
         self.q = None
@@ -30,12 +30,12 @@ class RedisHook(HoocronHookBase):
         g.add_argument('--redis-list', metavar='KEY', default=def_redis_list, help=f'name of redis key to trigger jobs. def: {def_redis_list}')
 
     def configure(self, jobs, args):
-        self.redis = args.redis
+        self.redis_url = args.redis_url
         self.redis_list = args.redis_list
         self.sleep = args.sleep
 
-        if args.redis_job:
-            for name in args.redis_job:
+        if args.redis:
+            for name in args.redis:
                 try:
                     j = jobs[name]
                 except KeyError:
@@ -89,7 +89,7 @@ class RedisHook(HoocronHookBase):
 
 
     def get_redis(self):
-        return redis.Redis.from_url(self.redis, decode_responses=True)
+        return redis.Redis.from_url(self.redis_url, decode_responses=True)
 
 
 
